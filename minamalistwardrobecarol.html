@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Useful Expressions: Minimalist Wardrobe | Caroline</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" defer></script>
+<style>
+  :root{
+    --coral:#D85A30;
+    --coral-light:#F3D8CC;
+    --coral-mid:#E8896A;
+    --coral-dark:#A8401F;
+    --ink:#20242B;
+    --paper:#FBF8F5;
+    --card:#FFFFFF;
+    --green:#2F7D4F;
+    --green-bg:#E6F4EA;
+    --amber:#B4571D;
+    --amber-bg:#FBEAE0;
+    --line:#E7E0D8;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--paper);color:var(--ink);font-family:'DM Sans',sans-serif;line-height:1.5;padding-bottom:84px;}
+  header{background:linear-gradient(135deg,var(--coral-dark),var(--coral));color:#fff;padding:32px 20px 24px;position:sticky;top:0;z-index:20;}
+  header .wrap{max-width:820px;margin:0 auto;}
+  header .eyebrow{font-size:12px;letter-spacing:.14em;text-transform:uppercase;opacity:.85;font-weight:700;}
+  header h1{font-family:'Playfair Display',serif;font-weight:700;font-size:clamp(22px,4vw,32px);margin:6px 0 6px;}
+  header p{margin:0;opacity:.92;font-size:15px;max-width:62ch;}
+  nav.tabs{display:flex;gap:6px;max-width:820px;margin:16px auto 0;padding:0 20px;flex-wrap:wrap;}
+  nav.tabs button{background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.4);color:#fff;padding:8px 13px;border-radius:999px;font-family:'DM Sans',sans-serif;font-weight:700;font-size:12.5px;cursor:pointer;}
+  nav.tabs button:hover{background:rgba(255,255,255,.24);}
+  nav.tabs button.active{background:#fff;color:var(--coral-dark);}
+  main{max-width:820px;margin:0 auto;padding:28px 20px 10px;}
+  section.panel{display:none;}
+  section.panel.active{display:block;animation:fade .25s ease;}
+  @keyframes fade{from{opacity:0;transform:translateY(4px);}to{opacity:1;transform:translateY(0);}}
+  h2.section-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:700;margin:0 0 4px;color:var(--coral-dark);}
+  p.section-sub{margin:0 0 20px;color:#585048;font-size:14.5px;}
+
+  .pdf-title{display:none;margin-bottom:18px;}
+  .pdf-title h1{font-family:'Playfair Display',serif;color:var(--coral-dark);margin:0 0 4px;font-size:24px;}
+  .pdf-title p{margin:0;color:#585048;font-size:13.5px;}
+  .pdf-answer{border:1.5px solid var(--line);border-radius:8px;padding:10px 12px;font-size:14.5px;white-space:pre-wrap;background:#fff;}
+
+  .group-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:var(--coral-dark);margin:22px 0 10px;}
+  .expr-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  @media(max-width:620px){.expr-grid{grid-template-columns:1fr;}}
+  .expr-card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:11px 14px;}
+  .expr-card .e{font-weight:700;font-size:14.5px;color:var(--ink);}
+  .expr-card .m{font-size:12.5px;color:#847a6f;margin-top:1px;}
+  .expr-card .x{margin-top:6px;font-size:13px;background:#FAF6F2;border-left:3px solid var(--coral-mid);padding:5px 9px;border-radius:0 8px 8px 0;}
+
+  .qbox{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:14px;}
+  .qbox .qnum{font-size:12px;font-weight:700;color:var(--coral-dark);margin-bottom:6px;}
+  .qbox .qtext{font-size:15.5px;margin-bottom:6px;line-height:2.1;}
+  .qbox input[type=text]{width:130px;max-width:100%;padding:7px 10px;border:1.5px solid var(--line);border-radius:8px;font-family:'DM Sans',sans-serif;font-size:14.5px;background:#fff;}
+  .qbox input[type=text]:focus{outline:none;border-color:var(--coral);}
+  .qbox input.correct{border-color:var(--green);background:var(--green-bg);}
+  .qbox input.wrong{border-color:var(--amber);background:var(--amber-bg);}
+  .feedback{font-size:13px;margin-top:2px;font-weight:700;min-height:16px;}
+  .feedback.correct{color:var(--green);}
+  .feedback.wrong{color:var(--amber);}
+
+  .score-bar-wrap{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 18px;margin-bottom:20px;display:flex;align-items:center;gap:14px;}
+  .score-bar-track{flex:1;height:10px;background:var(--coral-light);border-radius:999px;overflow:hidden;}
+  .score-bar-fill{height:100%;background:var(--coral);width:0%;transition:width .4s ease;}
+  .score-label{font-size:13px;font-weight:700;color:var(--coral-dark);white-space:nowrap;}
+
+  .pick-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:14px;}
+  .pick-card .qnum{font-size:12px;font-weight:700;color:var(--coral-dark);margin-bottom:4px;}
+  .pick-card .situation{font-size:13px;color:#847a6f;font-style:italic;margin-bottom:6px;}
+  .pick-card .opening{font-size:15.5px;font-weight:700;margin-bottom:10px;}
+  .choice-row{display:flex;flex-direction:column;gap:8px;}
+  .choice-pill{display:block;width:100%;text-align:left;background:#fff;border:1.5px solid var(--line);border-radius:10px;padding:10px 14px;font-size:14px;cursor:pointer;font-family:'DM Sans',sans-serif;color:var(--ink);}
+  .choice-pill:hover{border-color:var(--coral);}
+  .choice-pill.correct{border-color:var(--green);background:var(--green-bg);}
+  .choice-pill.wrong{border-color:var(--amber);background:var(--amber-bg);}
+  .pick-note{margin-top:8px;font-size:13px;color:#847a6f;min-height:16px;font-style:italic;}
+
+  .prompt-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-bottom:16px;}
+  .prompt-card .qnum{font-size:12px;font-weight:700;color:var(--coral-dark);margin-bottom:4px;}
+  .prompt-card .qtext{font-size:15.5px;margin-bottom:8px;}
+  .prompt-card .tag{display:inline-block;font-size:11.5px;font-weight:700;background:var(--coral-light);color:var(--coral-dark);padding:2px 9px;border-radius:999px;margin-bottom:10px;}
+  .prompt-card textarea{width:100%;min-height:70px;border:1.5px solid var(--line);border-radius:8px;padding:10px 12px;font-family:'DM Sans',sans-serif;font-size:14.5px;resize:vertical;}
+  .prompt-card textarea:focus{outline:none;border-color:var(--coral);}
+  details.model{margin-top:10px;}
+  details.model summary{cursor:pointer;font-size:13px;font-weight:700;color:var(--coral-dark);list-style:none;}
+  details.model summary::-webkit-details-marker{display:none;}
+  details.model summary::before{content:"▸ ";}
+  details.model[open] summary::before{content:"▾ ";}
+  details.model .model-text{margin-top:8px;background:#FAF6F2;border-left:3px solid var(--coral-mid);padding:10px 14px;border-radius:0 8px 8px 0;font-size:14px;}
+
+  .speak-card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-bottom:16px;display:flex;gap:18px;align-items:center;}
+  .speak-card .body{flex:1;}
+  .speak-card .qnum{font-size:12px;font-weight:700;color:var(--coral-dark);margin-bottom:6px;}
+  .speak-card .qtext{font-size:16px;margin-bottom:8px;}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;}
+  .chips span{font-size:12px;font-weight:700;background:var(--coral-light);color:var(--coral-dark);padding:3px 10px;border-radius:999px;}
+  .timer-btn{background:var(--coral);color:#fff;border:none;padding:8px 16px;border-radius:8px;font-weight:700;font-size:13.5px;cursor:pointer;}
+  .timer-btn:hover{background:var(--coral-dark);}
+  .timer-btn:disabled{opacity:.7;cursor:default;}
+  .ring{position:relative;width:76px;height:76px;flex-shrink:0;}
+  .ring svg{width:76px;height:76px;transform:rotate(-90deg);}
+  .ring circle{fill:none;stroke-width:6;}
+  .ring .ring-bg{stroke:var(--coral-light);}
+  .ring .ring-fg{stroke:var(--green);stroke-linecap:round;transition:stroke-dashoffset 1s linear,stroke .3s ease;}
+  .ring .ring-time{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Playfair Display',serif;font-weight:700;font-size:20px;}
+  .ring.danger .ring-fg{stroke:#C23B22;}
+  .ring.danger{animation:pulse 1s ease-in-out infinite;}
+  @keyframes pulse{0%,100%{transform:scale(1);}50%{transform:scale(1.07);}}
+  @media(max-width:520px){.speak-card{flex-direction:column;align-items:flex-start;}}
+
+  .instructions{background:var(--coral-light);border-radius:12px;padding:12px 16px;font-size:13.5px;color:var(--coral-dark);margin-bottom:18px;}
+
+  details.teacher-key{max-width:820px;margin:26px auto 0;background:#fff;border:1px dashed var(--coral-mid);border-radius:12px;padding:12px 16px;}
+  details.teacher-key summary{cursor:pointer;font-weight:700;font-size:13px;color:var(--coral-dark);}
+  details.teacher-key .key-body{font-size:13.5px;margin-top:10px;}
+  details.teacher-key .key-body p{margin:6px 0;}
+
+  .toolbar{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--line);padding:10px 20px;display:flex;gap:10px;justify-content:center;align-items:center;flex-wrap:wrap;z-index:30;}
+  .toolbar button{border:none;padding:9px 15px;border-radius:8px;font-weight:700;font-size:13px;cursor:pointer;font-family:'DM Sans',sans-serif;}
+  .toolbar input{border:1.5px solid var(--line);border-radius:8px;padding:8px 10px;font-size:13px;width:150px;font-family:'DM Sans',sans-serif;}
+  .btn-save{background:var(--coral);color:#fff;}
+  .btn-save:hover{background:var(--coral-dark);}
+  .btn-copy{background:#fff;color:var(--coral-dark);border:1.5px solid var(--coral)!important;}
+  .btn-pdf{background:#fff;color:#585048;border:1.5px solid var(--line)!important;}
+  .total-score{font-size:13px;font-weight:700;color:var(--coral-dark);}
+  .save-msg{font-size:12px;color:var(--green);font-weight:700;min-width:70px;}
+
+  footer{max-width:820px;margin:26px auto 0;padding:0 20px;color:#8a8175;font-size:12px;}
+
+  body.pdf-mode .panel{display:block !important;}
+  body.pdf-mode .no-pdf{display:none !important;}
+  body.pdf-mode .pdf-title{display:block;}
+  @media print{
+    header, nav.tabs, .toolbar, .no-pdf{display:none !important;}
+    section.panel{display:block !important;}
+    body{padding-bottom:0;}
+    .pdf-title{display:block;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="eyebrow">English for Tech Professionals</div>
+    <h1>Useful Expressions: Minimalist Wardrobe</h1>
+    <p><span id="nameDisplay">Caroline</span> — expressions from the video that work in everyday life, presentations and your job in tech</p>
+  </div>
+  <nav class="tabs no-pdf">
+    <button class="tab-btn active" data-tab="expr">Expressions</button>
+    <button class="tab-btn" data-tab="fill">Complete</button>
+    <button class="tab-btn" data-tab="pick">Choose</button>
+    <button class="tab-btn" data-tab="write">Your sentences</button>
+    <button class="tab-btn" data-tab="speak">Speaking</button>
+  </nav>
+</header>
+
+<main id="pdfContent">
+
+  <div class="pdf-title">
+    <h1>Useful Expressions: Minimalist Wardrobe</h1>
+    <p>Student: <span id="nameDisplayPdf">Caroline</span></p>
+  </div>
+
+  <!-- ===================== EXPRESSIONS ===================== -->
+  <section class="panel active" id="expr">
+    <h2 class="section-title">Expressions to take with you</h2>
+    <p class="section-sub">None of these are only about clothes. Read them, notice the example, then practice in the next tabs.</p>
+    <div id="exprBox"></div>
+  </section>
+
+  <!-- ===================== COMPLETE ===================== -->
+  <section class="panel" id="fill">
+    <h2 class="section-title">Complete the expression</h2>
+    <p class="section-sub">Type the missing word or words. Every sentence uses an expression from the video.</p>
+    <div class="score-bar-wrap">
+      <span class="score-label" id="scoreLabel-fill">0 / 9 correct</span>
+      <div class="score-bar-track"><div class="score-bar-fill" id="scoreFill-fill"></div></div>
+    </div>
+    <div id="fillBox"></div>
+  </section>
+
+  <!-- ===================== CHOOSE ===================== -->
+  <section class="panel" id="pick">
+    <h2 class="section-title">Choose the best expression</h2>
+    <p class="section-sub">Read the situation and pick the option that sounds natural.</p>
+    <div class="score-bar-wrap">
+      <span class="score-label" id="scoreLabel-pick">0 / 9 correct</span>
+      <div class="score-bar-track"><div class="score-bar-fill" id="scoreFill-pick"></div></div>
+    </div>
+    <div id="pickBox"></div>
+  </section>
+
+  <!-- ===================== WRITE ===================== -->
+  <section class="panel" id="write">
+    <h2 class="section-title">Your sentences</h2>
+    <p class="section-sub">Write about your own life and work. Use the expressions suggested in each tag.</p>
+    <div class="instructions">Tip: write 2 to 4 sentences for each prompt. Use at least one expression from the tag.</div>
+    <div id="writeBox"></div>
+  </section>
+
+  <!-- ===================== SPEAKING ===================== -->
+  <section class="panel" id="speak">
+    <h2 class="section-title">Speaking</h2>
+    <p class="section-sub">Answer out loud before the ring runs out. Try to use every expression in the blue chips.</p>
+    <div id="speakBox"></div>
+  </section>
+
+  <details class="teacher-key no-pdf">
+    <summary>Teacher answer key</summary>
+    <div class="key-body">
+      <p><b>Complete:</b> 1) live · 2) prioritize / over · 3) all-time · 4) obsessed · 5) For · 6) noticed · 7) Life · 8) handful · 9) building / blocks</p>
+      <p><b>Choose:</b> 1) You might be wondering · 2) Moving on to · 3) Last but not least · 4) key · 5) no such · 6) get in · 7) for now · 8) I hope · 9) As a result</p>
+    </div>
+  </details>
+
+</main>
+
+<div class="toolbar no-pdf">
+  <input type="text" id="nameInput" placeholder="Your name" autocomplete="off">
+  <span class="total-score" id="totalScore">Score: 0 / 18</span>
+  <button class="btn-save" id="saveBtn">Save</button>
+  <button class="btn-copy" id="copyBtn">Copy for Notion</button>
+  <button class="btn-pdf" id="pdfBtn">Save as PDF</button>
+  <span class="save-msg" id="saveMsg"></span>
+</div>
+
+<footer class="no-pdf">Expressions from the minimalist wardrobe video, practiced in Caroline's classes.</footer>
+
+<script>
+const STORAGE_KEY = "caroline_campos_wardrobe_expressions_v1";
+const TOTALS = {fill:9, pick:9};
+const correctSet = {fill:new Set(), pick:new Set()};
+
+function norm(s){
+  return String(s).toLowerCase().replace(/[‘’]/g,"'").replace(/\s+/g,' ').trim();
+}
+
+function refreshScores(){
+  let total = 0;
+  Object.keys(TOTALS).forEach(k=>{
+    const n = correctSet[k].size;
+    total += n;
+    const label = document.getElementById('scoreLabel-'+k);
+    const fill = document.getElementById('scoreFill-'+k);
+    if(label) label.textContent = n + ' / ' + TOTALS[k] + ' correct';
+    if(fill) fill.style.width = (n/TOTALS[k]*100) + '%';
+  });
+  const ts = document.getElementById('totalScore');
+  if(ts) ts.textContent = 'Score: ' + total + ' / 18';
+}
+
+// ---------- TABS ----------
+document.querySelectorAll('.tab-btn').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById(btn.dataset.tab).classList.add('active');
+    window.scrollTo({top:0});
+  });
+});
+
+// ---------- EXPRESSIONS REFERENCE ----------
+try {
+const exprGroups = [
+  {title:"Habits and preferences", items:[
+    {e:"I never reach for...", m:"eu nunca pego... (por hábito)", x:"I never reach for my old laptop anymore."},
+    {e:"I live in...", m:"eu vivo de... (uso sempre)", x:"At work I live in hoodies and jeans."},
+    {e:"I prioritize X over Y", m:"priorizo X em vez de Y", x:"I prioritize comfort over style."},
+    {e:"my all-time favorite", m:"meu favorito de todos os tempos", x:"This is my all-time favorite tool."},
+    {e:"I'm not obsessed with...", m:"não sou obcecada por...", x:"I'm not obsessed with having the newest phone."},
+    {e:"for some reason", m:"por algum motivo", x:"For some reason, the bug only appears on Fridays."},
+    {e:"I've noticed (that)...", m:"percebi que...", x:"I've noticed that I focus better in the morning."}
+  ]},
+  {title:"Change and experience", items:[
+    {e:"Life happens.", m:"a vida acontece", x:"The deadline moved again. Life happens."},
+    {e:"Over time, ...", m:"com o tempo", x:"Over time, I became more flexible with my plans."},
+    {e:"As a result, ...", m:"como resultado", x:"The server crashed. As a result, we lost an hour."},
+    {e:"I'm keeping it for now.", m:"vou ficar com isso por enquanto", x:"I'm keeping my old phone for now."},
+    {e:"I'm thinking about giving it to...", m:"estou pensando em dar para...", x:"I'm thinking about giving this monitor to my brother."}
+  ]},
+  {title:"Describing and quantifying", items:[
+    {e:"a handful of...", m:"um punhado de, poucos", x:"We only have a handful of senior developers."},
+    {e:"a solid collection of...", m:"uma coleção sólida de", x:"I have a solid collection of useful shortcuts."},
+    {e:"carefully chosen / planned", m:"escolhido / planejado com cuidado", x:"Every feature was carefully planned."},
+    {e:"all kinds of... / all occasions", m:"todo tipo de... / todas as ocasiões", x:"This jacket works for all kinds of occasions."},
+    {e:"building blocks", m:"blocos de construção, a base", x:"Clean code is one of the building blocks of a good product."},
+    {e:"to mix and match", m:"misturar e combinar", x:"You can mix and match these tools."}
+  ]},
+  {title:"Giving advice", items:[
+    {e:"The key to... is...", m:"a chave para... é...", x:"The key to good teamwork is clear communication."},
+    {e:"There's no such thing as...", m:"não existe isso de...", x:"There's no such thing as a perfect plan."},
+    {e:"Avoid... so you don't...", m:"evite... para não...", x:"Avoid doing too much at once so you don't burn out."},
+    {e:"Use this as a guide.", m:"use isso como guia", x:"Use this checklist as a guide."},
+    {e:"I didn't want it to get in the way of...", m:"não queria que isso atrapalhasse...", x:"I didn't want work to get in the way of my weekends."}
+  ]},
+  {title:"Structuring a talk or a video", items:[
+    {e:"You might be wondering...", m:"você pode estar se perguntando...", x:"You might be wondering why we changed the plan."},
+    {e:"Let me show you.", m:"deixa eu te mostrar", x:"Let me show you how it works."},
+    {e:"As you can see, ...", m:"como você pode ver", x:"As you can see, sales went up."},
+    {e:"Moving on to...", m:"passando para...", x:"Moving on to the budget."},
+    {e:"Last but not least, ...", m:"por último, mas não menos importante", x:"Last but not least, remember to rest."},
+    {e:"If you've made it this far...", m:"se você chegou até aqui...", x:"If you've made it this far, thank you!"},
+    {e:"I'd love to hear...", m:"adoraria ouvir...", x:"Do you have any tips? I'd love to hear them."}
+  ]}
+];
+const exprBox = document.getElementById('exprBox');
+exprGroups.forEach(g=>{
+  const t = document.createElement('div');
+  t.className = 'group-title';
+  t.textContent = g.title;
+  exprBox.appendChild(t);
+  const grid = document.createElement('div');
+  grid.className = 'expr-grid';
+  g.items.forEach(it=>{
+    const c = document.createElement('div');
+    c.className = 'expr-card';
+    c.innerHTML = '<div class="e">' + it.e + '</div><div class="m">' + it.m + '</div><div class="x">' + it.x + '</div>';
+    grid.appendChild(c);
+  });
+  exprBox.appendChild(grid);
+});
+} catch(err){ console.error('Expressions section failed to build:', err); }
+
+// ---------- FILL-IN ----------
+try {
+const fillItems = [
+  {text:"At work, I ___ in hoodies and jeans.", ans:[["live"]]},
+  {text:"When I choose my clothes, I ___ comfort ___ style.", ans:[["prioritize"],["over"]]},
+  {text:"Coffee is my ___ favorite part of the morning.", ans:[["all-time","all time"]]},
+  {text:"I'm not ___ with having the newest phone.", ans:[["obsessed"]]},
+  {text:"___ some reason, my code only breaks on Fridays.", ans:[["for"]]},
+  {text:"I've ___ that I focus better in the morning.", ans:[["noticed"]]},
+  {text:"The deadline moved twice this week. ___ happens!", ans:[["life"]]},
+  {text:"We only have a ___ of senior developers, so everyone is busy.", ans:[["handful"]]},
+  {text:"This framework is one of the ___ ___ of our product.", ans:[["building"],["blocks"]]}
+];
+const fillBox = document.getElementById('fillBox');
+fillItems.forEach((item,i)=>{
+  const parts = item.text.split('___');
+  const box = document.createElement('div');
+  box.className = 'qbox';
+  box.dataset.idx = i;
+  let html = '<div class="qnum">Question ' + (i+1) + '</div><div class="qtext">';
+  parts.forEach((p,pi)=>{
+    html += p;
+    if(pi < parts.length-1){
+      html += '<input type="text" data-key="fill-' + i + '-' + pi + '" autocomplete="off" autocapitalize="off" spellcheck="false">';
+    }
+  });
+  html += '</div><div class="feedback"></div>';
+  box.innerHTML = html;
+  box._answers = item.ans;
+  fillBox.appendChild(box);
+});
+fillBox.addEventListener('input', (e)=>{
+  if(e.target.tagName !== 'INPUT') return;
+  const box = e.target.closest('.qbox');
+  const idx = box.dataset.idx;
+  const inputs = Array.from(box.querySelectorAll('input'));
+  const fb = box.querySelector('.feedback');
+  let allCorrect = true, allFilled = true;
+  inputs.forEach((inp,bi)=>{
+    const v = norm(inp.value);
+    if(v === ''){
+      allFilled = false; allCorrect = false;
+      inp.classList.remove('correct','wrong');
+      return;
+    }
+    const ok = box._answers[bi].map(norm).includes(v);
+    inp.classList.toggle('correct', ok);
+    inp.classList.toggle('wrong', !ok);
+    if(!ok) allCorrect = false;
+  });
+  const key = 'fill-' + idx;
+  if(allCorrect){
+    fb.textContent = '✓ Correct';
+    fb.className = 'feedback correct';
+    correctSet.fill.add(key);
+  } else {
+    correctSet.fill.delete(key);
+    if(allFilled){
+      fb.textContent = 'Try again';
+      fb.className = 'feedback wrong';
+    } else {
+      fb.textContent = '';
+      fb.className = 'feedback';
+    }
+  }
+  refreshScores();
+});
+} catch(err){ console.error('Fill-in section failed to build:', err); }
+
+// ---------- PICK THE BEST ----------
+try {
+const pickItems = [
+  {sit:"You are starting a presentation and want to answer a question people probably have.", q:"___ why we changed the plan.", opts:["You might be wondering","You might wonder to","You are wondering for"], ok:0, why:"\"You might be wondering...\" introduces a question your audience may have."},
+  {sit:"You are changing to the next slide.", q:"___ the budget.", opts:["Moving on to","Moving up at","Move on in"], ok:0, why:"\"Moving on to...\" connects one topic to the next."},
+  {sit:"You are giving your final tip.", q:"___, remember to take breaks.", opts:["At last but no least","Last but not least","Last but not the least"], ok:1, why:"\"Last but not least\" introduces the final, equally important point."},
+  {sit:"You are giving advice about documentation.", q:"The ___ to good documentation is keeping it simple.", opts:["door","lock","key"], ok:2, why:"\"The key to...\" means the most important thing for success."},
+  {sit:"You are explaining that perfection does not exist.", q:"There's ___ thing as a perfect plan.", opts:["not such","no such","none such"], ok:1, why:"\"There's no such thing as...\" means something does not exist."},
+  {sit:"You are explaining why you chose a simple tool.", q:"I didn't want the new tool to ___ the way of my team's work.", opts:["go in","come on","get in"], ok:2, why:"\"Get in the way of\" means to block or disturb something."},
+  {sit:"You are still using your old phone, but you may sell it later.", q:"I'm keeping my old phone ___.", opts:["from now","for now","to now"], ok:1, why:"\"For now\" means temporarily, for the moment."},
+  {sit:"You are ending a video or a talk.", q:"___ you enjoyed it. Do you have any tips? I'd love to hear them.", opts:["I wish to","I hoping","I hope"], ok:2, why:"\"I hope you enjoyed...\" is the natural way to close."},
+  {sit:"Something went wrong and you describe the consequence.", q:"Our server crashed. ___, we lost an hour of work.", opts:["In result","As a result","At result"], ok:1, why:"\"As a result\" introduces a consequence."}
+];
+const pickBox = document.getElementById('pickBox');
+pickItems.forEach((it,i)=>{
+  const card = document.createElement('div');
+  card.className = 'pick-card';
+  let pills = '<div class="choice-row">';
+  it.opts.forEach((o,oi)=>{
+    pills += '<button type="button" class="choice-pill" data-idx="' + i + '" data-oi="' + oi + '">' + o + '</button>';
+  });
+  pills += '</div>';
+  card.innerHTML = '<div class="qnum">Question ' + (i+1) + '</div><div class="situation">' + it.sit + '</div><div class="opening">' + it.q + '</div>' + pills + '<div class="pick-note" id="pnote-' + i + '"></div>';
+  pickBox.appendChild(card);
+});
+pickBox.addEventListener('click', (e)=>{
+  const pill = e.target.closest('.choice-pill');
+  if(!pill) return;
+  const i = parseInt(pill.dataset.idx);
+  const oi = parseInt(pill.dataset.oi);
+  const card = pill.closest('.pick-card');
+  card.querySelectorAll('.choice-pill').forEach(p=>p.classList.remove('correct','wrong'));
+  const note = document.getElementById('pnote-'+i);
+  const key = 'pick-' + i;
+  card.dataset.chosen = oi;
+  if(oi === pickItems[i].ok){
+    pill.classList.add('correct');
+    note.textContent = '✓ ' + pickItems[i].why;
+    correctSet.pick.add(key);
+  } else {
+    pill.classList.add('wrong');
+    note.textContent = 'Not quite. Check the Expressions tab and try another option.';
+    correctSet.pick.delete(key);
+  }
+  refreshScores();
+  if(typeof saveData === 'function') saveData(false);
+});
+} catch(err){ console.error('Pick section failed to build:', err); }
+
+// ---------- WRITING ----------
+try {
+const writeItems = [
+  {tag:"I never reach for... / I live in...", text:"Describe what you usually wear (or use) at work and what you almost never choose.", model:"At work I live in jeans and comfortable sweaters. I never reach for formal shirts, even for meetings."},
+  {tag:"I prioritize X over Y", text:"Write about what you prioritize in your workday or in your life, and what comes second.", model:"I prioritize quality over speed when I write code. I'd rather deliver one solid feature than three rushed ones."},
+  {tag:"The key to... is... / Avoid... so you don't...", text:"Give advice to a new teammate who is starting in your company.", model:"The key to settling in quickly is asking questions early. Avoid waiting too long so you don't get stuck."},
+  {tag:"Over time... / As a result...", text:"Write about something that changed in your career, routine or habits.", model:"Over time, I became more organized with my tasks. As a result, I finish my work earlier."},
+  {tag:"I'm not obsessed with... / my all-time favorite", text:"Write about something you are relaxed about, and something you love the most.", model:"I'm not obsessed with having the perfect desk setup. My all-time favorite thing is my big second monitor."},
+  {tag:"You might be wondering... / As you can see... / Last but not least...", text:"Write a short introduction to your workspace as if you were recording a video.", model:"You might be wondering what my workspace looks like. As you can see, it's simple and tidy. Last but not least, there's a plant that keeps me calm."}
+];
+const writeBox = document.getElementById('writeBox');
+writeItems.forEach((it,i)=>{
+  const card = document.createElement('div');
+  card.className = 'prompt-card';
+  card.innerHTML = '<div class="qnum">Prompt ' + (i+1) + '</div><span class="tag">' + it.tag + '</span><div class="qtext">' + it.text + '</div>' +
+    '<textarea data-key="write-' + i + '" placeholder="Write here..."></textarea>' +
+    '<details class="model no-pdf"><summary>See an example</summary><div class="model-text">' + it.model + '</div></details>';
+  writeBox.appendChild(card);
+});
+} catch(err){ console.error('Writing section failed to build:', err); }
+
+// ---------- SPEAKING (ring timers) ----------
+try {
+const CIRC = 2 * Math.PI * 26;
+const speakItems = [
+  {q:"Describe what you usually wear or use in a normal workday. What do you almost never choose?", chips:["I live in...","I never reach for...","I prioritize X over Y"], seconds:45},
+  {q:"Tell me about something you are not obsessed with, and something that is your all-time favorite.", chips:["I'm not obsessed with...","my all-time favorite","for some reason"], seconds:45},
+  {q:"Give three tips to a new person joining your team.", chips:["The key to... is...","Avoid... so you don't...","Last but not least,"], seconds:60},
+  {q:"Tell me about something that changed in your career or routine over the years.", chips:["Over time,","Life happens.","As a result,"], seconds:60},
+  {q:"Present your workspace or desk as if you were making a video.", chips:["You might be wondering...","As you can see,","Moving on to...","Last but not least,"], seconds:75},
+  {q:"Describe your own closet in one minute: what you keep, what you wear out fast and what you want to get rid of.", chips:["a handful of...","building blocks","mix and match","I'm keeping it for now."], seconds:75}
+];
+const speakBox = document.getElementById('speakBox');
+const timers = {};
+speakItems.forEach((it,i)=>{
+  const card = document.createElement('div');
+  card.className = 'speak-card';
+  let chips = '<div class="chips">';
+  it.chips.forEach(c=>{ chips += '<span>' + c + '</span>'; });
+  chips += '</div>';
+  card.innerHTML =
+    '<div class="body"><div class="qnum">Question ' + (i+1) + '</div><div class="qtext">' + it.q + '</div>' + chips +
+    '<button type="button" class="timer-btn" data-idx="' + i + '">Start (' + it.seconds + 's)</button></div>' +
+    '<div class="ring no-pdf" id="ring-' + i + '"><svg viewBox="0 0 60 60"><circle class="ring-bg" cx="30" cy="30" r="26"></circle>' +
+    '<circle class="ring-fg" id="rfg-' + i + '" cx="30" cy="30" r="26" stroke-dasharray="' + CIRC.toFixed(2) + '" stroke-dashoffset="0"></circle></svg>' +
+    '<span class="ring-time" id="time-' + i + '">' + it.seconds + '</span></div>';
+  speakBox.appendChild(card);
+});
+speakBox.addEventListener('click', (e)=>{
+  const btn = e.target.closest('.timer-btn');
+  if(!btn) return;
+  const i = parseInt(btn.dataset.idx);
+  const total = speakItems[i].seconds;
+  const ring = document.getElementById('ring-'+i);
+  const fg = document.getElementById('rfg-'+i);
+  const label = document.getElementById('time-'+i);
+  if(timers[i]) clearInterval(timers[i]);
+  let remaining = total;
+  btn.disabled = true;
+  btn.textContent = 'Speaking...';
+  ring.classList.remove('danger');
+  fg.style.transition = 'none';
+  fg.style.strokeDashoffset = '0';
+  label.textContent = remaining;
+  void fg.getBoundingClientRect();
+  fg.style.transition = '';
+  timers[i] = setInterval(()=>{
+    remaining--;
+    label.textContent = Math.max(remaining,0);
+    fg.style.strokeDashoffset = (CIRC * (1 - remaining/total)).toFixed(2);
+    if(remaining <= 10) ring.classList.add('danger');
+    if(remaining <= 0){
+      clearInterval(timers[i]);
+      ring.classList.remove('danger');
+      label.textContent = 'Done';
+      btn.disabled = false;
+      btn.textContent = 'Restart (' + total + 's)';
+    }
+  },1000);
+});
+} catch(err){ console.error('Speaking section failed to build:', err); }
+
+// ---------- SAVE / LOAD / COPY / PDF ----------
+function collectData(){
+  const data = {};
+  document.querySelectorAll('textarea[data-key]').forEach(t=>{ data[t.dataset.key] = t.value; });
+  document.querySelectorAll('.qbox input[data-key]').forEach(inp=>{ data[inp.dataset.key] = inp.value; });
+  document.querySelectorAll('.pick-card').forEach((card,i)=>{
+    if(card.dataset.chosen !== undefined) data['pick-'+i] = card.dataset.chosen;
+  });
+  const ni = document.getElementById('nameInput');
+  if(ni) data.studentName = ni.value;
+  return data;
+}
+
+function saveData(showMsg){
+  try{
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(collectData()));
+    if(showMsg){
+      const msg = document.getElementById('saveMsg');
+      msg.textContent = 'Saved ✓';
+      setTimeout(()=>{msg.textContent='';}, 2500);
+    }
+  }catch(err){ console.error('Save failed', err); }
+}
+
+function updateName(){
+  const v = document.getElementById('nameInput').value.trim() || 'Caroline';
+  document.getElementById('nameDisplay').textContent = v;
+  document.getElementById('nameDisplayPdf').textContent = v;
+}
+
+function loadData(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if(!raw) return;
+    const data = JSON.parse(raw);
+    document.querySelectorAll('textarea[data-key]').forEach(t=>{
+      if(data[t.dataset.key] !== undefined) t.value = data[t.dataset.key];
+    });
+    document.querySelectorAll('.qbox input[data-key]').forEach(inp=>{
+      if(data[inp.dataset.key] !== undefined && data[inp.dataset.key] !== ''){
+        inp.value = data[inp.dataset.key];
+        inp.dispatchEvent(new Event('input', {bubbles:true}));
+      }
+    });
+    document.querySelectorAll('.pick-card').forEach((card,i)=>{
+      if(data['pick-'+i] !== undefined){
+        const pill = card.querySelector('.choice-pill[data-oi="' + data['pick-'+i] + '"]');
+        if(pill) pill.click();
+      }
+    });
+    if(data.studentName !== undefined) document.getElementById('nameInput').value = data.studentName;
+    updateName();
+  }catch(err){ console.error('Load failed', err); }
+}
+
+document.addEventListener('input', (e)=>{
+  if(e.target.id === 'nameInput') updateName();
+  if(e.target.matches('textarea[data-key], .qbox input[data-key], #nameInput')) saveData(false);
+});
+document.getElementById('saveBtn').addEventListener('click', ()=>saveData(true));
+
+document.getElementById('copyBtn').addEventListener('click', ()=>{
+  const name = document.getElementById('nameInput').value.trim() || 'Caroline';
+  let text = 'USEFUL EXPRESSIONS (minimalist wardrobe) — ' + name + '\n';
+  text += document.getElementById('totalScore').textContent + '\n\nYOUR SENTENCES:\n';
+  document.querySelectorAll('#writeBox .prompt-card').forEach((card,i)=>{
+    const tag = card.querySelector('.tag').textContent;
+    const val = card.querySelector('textarea').value.trim();
+    text += (i+1) + '. [' + tag + '] ' + (val || '(not answered)') + '\n';
+  });
+  const msg = document.getElementById('saveMsg');
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(()=>{
+      msg.textContent = 'Copied ✓';
+      setTimeout(()=>{msg.textContent='';}, 2500);
+    }).catch(()=>{ alert('Could not copy automatically. Please select the text manually.'); });
+  } else {
+    alert('Could not copy automatically. Please select the text manually.');
+  }
+});
+
+document.getElementById('pdfBtn').addEventListener('click', ()=>{
+  if(typeof html2pdf === 'undefined'){ window.print(); return; }
+  const btn = document.getElementById('pdfBtn');
+  btn.disabled = true; btn.textContent = 'Creating PDF...';
+  const swaps = [];
+  document.querySelectorAll('textarea[data-key]').forEach(t=>{
+    const d = document.createElement('div');
+    d.className = 'pdf-answer';
+    d.textContent = t.value.trim() || '—';
+    t.style.display = 'none';
+    t.parentNode.insertBefore(d, t.nextSibling);
+    swaps.push([t,d]);
+  });
+  document.body.classList.add('pdf-mode');
+  const name = (document.getElementById('nameInput').value.trim() || 'Caroline').replace(/[^a-z0-9]+/gi,'_');
+  const done = ()=>{
+    document.body.classList.remove('pdf-mode');
+    swaps.forEach(([t,d])=>{ t.style.display=''; d.remove(); });
+    btn.disabled = false; btn.textContent = 'Save as PDF';
+  };
+  html2pdf().set({
+    margin:10,
+    filename: STORAGE_KEY + '_' + name + '.pdf',
+    image:{type:'jpeg',quality:0.98},
+    html2canvas:{scale:2,useCORS:true},
+    jsPDF:{unit:'mm',format:'a4',orientation:'portrait'},
+    pagebreak:{mode:['avoid-all','css','legacy']}
+  }).from(document.getElementById('pdfContent')).save().then(done).catch(()=>{
+    done();
+    alert('Could not create the PDF. Try again or use Print (Ctrl/Cmd + P).');
+  });
+});
+
+window.addEventListener('load', ()=>{ loadData(); refreshScores(); });
+</script>
+
+</body>
+</html>
